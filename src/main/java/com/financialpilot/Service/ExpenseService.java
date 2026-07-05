@@ -3,118 +3,181 @@ package com.financialpilot.service;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import com.financialpilot.database.BankAccountDAO;
+import com.financialpilot.database.ExpenseDAO;
+import com.financialpilot.model.BankAccount;
 import com.financialpilot.model.Expense;
 import com.financialpilot.util.InputValidator;
 
 public class ExpenseService {
 
-    private final InputValidator validator = new InputValidator();
-    public ArrayList<Expense> createExpenses(Scanner scanner) {
+    private UserService userService;
+    private BankAccountService bankAccountService;
+    private InputValidator validator = new InputValidator();
+    // Constructor
+    public ExpenseService(UserService userService,
+                          BankAccountService bankAccountService) {
 
-        ArrayList<Expense> expenses = new ArrayList<>();
-        Expense expense = new Expense();
+        this.userService = userService;
+        this.bankAccountService = bankAccountService;
+    }
 
-        System.out.print("\nHow many expenses do you want to add? ");
+    // Add Expense
+    public void addExpense(Scanner scanner) {
 
-        int numberOfExpenses = scanner.nextInt();
-        scanner.nextLine();
-
-        for (int i = 1; i <= numberOfExpenses; i++) {
-
-            System.out.println("\nExpense " + i);
-
-            System.out.print("Category: ");
-            expense.setCategory(scanner.nextLine());
-
-            System.out.print("Amount: ");
-            expense.setAmount(scanner.nextDouble());
-            scanner.nextLine();
-
-            System.out.print("Description: ");
-            expense.setDescription(scanner.nextLine());
-
-            expenses.add(expense);
+        if (!userService.isLoggedIn()) {
+            System.out.println("\nPlease login first.");
+            return;
         }
 
-        return expenses;
+        Expense expense = new Expense();
+
+        expense.setUserId(userService.getCurrentUser().getUserId());
+
+        int accountId = validator.readInt(scanner, "Enter Account ID: ");
+        BankAccount account = BankAccountDAO.getBankAccountById(String.valueOf(accountId));
+
+        if (account == null) {
+            System.out.println("Account not found with ID " + accountId + ".");
+            return;
+        }
+
+        if (account.getUserId() != userService.getCurrentUser().getUserId()) {
+            System.out.println("You cannot use another user's account.");
+            return;
+        }
+
+        expense.setAccountId(accountId);
+
+        expense.setTitle(validator.readNonEmptyString(scanner, "Enter Title: "));
+
+        expense.setCategory(validator.readNonEmptyString(scanner, "Enter Category: "));
+
+        expense.setAmount(validator.readDouble(scanner, "Enter Amount: ")); 
+       
+        expense.setDate(validator.readDate(scanner, "Enter Date (yyyy-MM-dd): "));
+       
+        expense.setNote(validator.readNonEmptyString(scanner, "Enter Note: "));
+
+        boolean success = ExpenseDAO.addExpense(expense);
+
+        if (success) {
+            System.out.println("\nExpense Added Successfully!");
+        } else {
+            System.out.println("\nFailed to Add Expense.");
+        }
     }
 
-    public void updateExpense(ArrayList<Expense> expenses, Scanner scanner) {
+    // View Expenses
+    public void viewExpenses() {
 
-    if (expenses.isEmpty()) {
-        System.out.println("\nNo expenses available.");
-        return;
+        if (!userService.isLoggedIn()) {
+            System.out.println("\nPlease login first.");
+            return;
+        }
+
+        int userId = userService.getCurrentUser().getUserId();
+
+        ArrayList<Expense> expenses =
+                ExpenseDAO.getAllExpensesByUser(userId);
+
+        if (expenses.isEmpty()) {
+            System.out.println("\nNo Expenses Found.");
+            return;
+        }
+
+        System.out.println("\n========== EXPENSES ==========");
+
+        for (Expense expense : expenses) {
+
+            System.out.println("Expense ID : " + expense.getExpenseId());
+            System.out.println("Account ID : " + expense.getAccountId());
+            System.out.println("Title      : " + expense.getTitle());
+            System.out.println("Category   : " + expense.getCategory());
+            System.out.println("Amount     : ₹" + expense.getAmount());
+            System.out.println("Date       : " + expense.getDate());
+            System.out.println("Note       : " + expense.getNote());
+
+            System.out.println("--------------------------------");
+        }
     }
 
-    displayExpenses(expenses);
+    // Update Expense
+    public void updateExpense(Scanner scanner) {
 
-    System.out.print("\nEnter expense number to update: ");
-    int choice = scanner.nextInt();
-    scanner.nextLine();
+        if (!userService.isLoggedIn()) {
+            System.out.println("\nPlease login first.");
+            return;
+        }
 
-    if (choice < 1 || choice > expenses.size()) {
-        System.out.println("Invalid expense number.");
-        return;
+      
+        int expenseId = Integer.parseInt(validator.readNonEmptyString(scanner, "Enter Expense ID: "));
+
+        Expense expense = ExpenseDAO.getExpenseById(expenseId);
+
+        if (expense == null) {
+            System.out.println("Expense not found.");
+            return;
+        }
+
+        if (expense.getUserId() != userService.getCurrentUser().getUserId()) {
+            System.out.println("You cannot update another user's expense.");
+            return;
+        }
+
+        int accountId = validator.readInt(scanner, "Enter Account ID: ");
+        BankAccount account = BankAccountDAO.getBankAccountById(String.valueOf(accountId));
+
+        if (account == null) {
+            System.out.println("Account not found with ID " + accountId + ".");
+            return;
+        }
+
+        if (account.getUserId() != userService.getCurrentUser().getUserId()) {
+            System.out.println("You cannot use another user's account.");
+            return;
+        }
+
+        expense.setAccountId(accountId);
+
+        expense.setTitle(validator.readNonEmptyString(scanner, "Enter Title: "));
+
+        expense.setCategory(validator.readNonEmptyString(scanner, "Enter Category: "));
+
+        expense.setAmount(validator.readDouble(scanner, "Enter Amount: "));
+
+        expense.setDate(validator.readDate(scanner, "Enter Date (yyyy-MM-dd): "));
+
+        expense.setNote(validator.readNonEmptyString(scanner, "Enter Note: "));
+
+        boolean success = ExpenseDAO.updateExpense(expense);
+
+        if (success) {
+            System.out.println("\nExpense Updated Successfully!");
+        } else {
+            System.out.println("\nFailed to Update Expense.");
+        }
     }
 
-    Expense expense = expenses.get(choice - 1);
+    // Delete Expense
+    public void deleteExpense(Scanner scanner) {
 
-    System.out.print("New Category: ");
-    expense.setCategory(scanner.nextLine());
+        if (!userService.isLoggedIn()) {
+            System.out.println("\nPlease login first.");
+            return;
+        }
 
-    System.out.print("New Amount: ");
-    expense.setAmount(scanner.nextDouble());
-    scanner.nextLine();
+        int expenseId = validator.readInt(scanner, "Enter Expense ID: ");
 
-    System.out.print("New Description: ");
-    expense.setDescription(scanner.nextLine());
+        boolean success = ExpenseDAO.deleteExpense(
+                expenseId,
+                userService.getCurrentUser().getUserId()
+        );
 
-    System.out.println("\nExpense updated successfully.");
-}
-
-    public void displayExpenses(ArrayList<Expense> expenses) {
-
-    if (expenses.isEmpty()) {
-        System.out.println("\nNo expenses found.");
-        return;
+        if (success) {
+            System.out.println("\nExpense Deleted Successfully!");
+        } else {
+            System.out.println("\nFailed to Delete Expense.");
+        }
     }
-
-    System.out.println("\n========== ALL EXPENSES ==========");
-
-    for (int i = 0; i < expenses.size(); i++) {
-
-        Expense expense = expenses.get(i);
-
-        System.out.println("\nExpense #" + (i + 1));
-        System.out.println("----------------------------");
-        System.out.println("Category    : " + expense.getCategory());
-        System.out.println("Amount      : $" + expense.getAmount());
-        System.out.println("Description : " + expense.getDescription());
-    }
-}
-
-public void deleteExpense(ArrayList<Expense> expenses, Scanner scanner) {
-
-    if (expenses.isEmpty()) {
-        System.out.println("\nNo expenses available.");
-        return;
-    }
-
-    displayExpenses(expenses);
-
-    System.out.print("\nEnter expense number to delete: ");
-    int choice = scanner.nextInt();
-    scanner.nextLine();
-
-    if (choice < 1 || choice > expenses.size()) {
-        System.out.println("Invalid expense number.");
-        return;
-    }
-
-    expenses.remove(choice - 1);
-
-    System.out.println("\nExpense deleted successfully.");
-}
-
-
 }

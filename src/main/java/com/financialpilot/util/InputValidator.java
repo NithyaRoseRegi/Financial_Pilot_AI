@@ -1,63 +1,10 @@
 package com.financialpilot.util;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.Scanner;
 
 public class InputValidator {
-
-    public int readPositiveInt(Scanner scanner, String message) {
-
-        while (true) {
-
-            System.out.print(message);
-
-            if (scanner.hasNextInt()) {
-
-                int value = scanner.nextInt();
-                scanner.nextLine();
-
-                if (value > 0) {
-                    return value;
-                }
-
-                System.out.println("Value must be greater than zero.");
-            } else {
-
-                System.out.println("Please enter a valid integer.");
-                scanner.nextLine();
-
-            }
-
-        }
-
-    }
-
-    public double readPositiveDouble(Scanner scanner, String message) {
-
-        while (true) {
-
-            System.out.print(message);
-
-            if (scanner.hasNextDouble()) {
-
-                double value = scanner.nextDouble();
-                scanner.nextLine();
-
-                if (value >= 0) {
-                    return value;
-                }
-
-                System.out.println("Value cannot be negative.");
-
-            } else {
-
-                System.out.println("Please enter a valid number.");
-                scanner.nextLine();
-
-            }
-
-        }
-
-    }
 
     public String readNonEmptyString(Scanner scanner, String message) {
 
@@ -65,16 +12,74 @@ public class InputValidator {
 
             System.out.print(message);
 
-            String value = scanner.nextLine().trim();
+            String input = scanner.nextLine().trim();
 
-            if (!value.isEmpty()) {
-                return value;
+            if (!input.isEmpty()) {
+                return input;
             }
 
             System.out.println("Input cannot be empty.");
-
         }
+    }
 
+    public int readInt(Scanner scanner, String message) {
+
+        while (true) {
+
+            try {
+
+                System.out.print(message);
+
+                return Integer.parseInt(scanner.nextLine());
+
+            } catch (NumberFormatException e) {
+
+                System.out.println("Please enter a valid integer.");
+            }
+        }
+    }
+
+    public double readDouble(Scanner scanner, String message) {
+
+        while (true) {
+
+            try {
+
+                System.out.print(message);
+
+                double value = Double.parseDouble(scanner.nextLine());
+
+                if (value < 0) {
+
+                    System.out.println("Value cannot be negative.");
+
+                    continue;
+                }
+
+                return value;
+
+            } catch (NumberFormatException e) {
+
+                System.out.println("Please enter a valid number.");
+            }
+        }
+    }
+
+    public LocalDate readDate(Scanner scanner, String message) {
+
+        while (true) {
+
+            try {
+
+                System.out.print(message);
+
+                return LocalDate.parse(scanner.nextLine());
+
+            } catch (DateTimeParseException e) {
+
+                System.out.println("Date must be in YYYY-MM-DD format.");
+            }
+        }
     }
 
     public String readEmail(Scanner scanner, String message) {
@@ -88,13 +93,44 @@ public class InputValidator {
             if (email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
 
                 return email;
-
             }
 
-            System.out.println("Invalid email address.");
-
+            System.out.println("Invalid email.");
         }
-
     }
 
+    public String readPassword(Scanner scanner, String message) {
+
+        while (true) {
+
+            System.out.print(message);
+
+            String password = scanner.nextLine();
+
+            if (password.length() >= 6) {
+
+                return password;
+            }
+
+            System.out.println("Password must contain at least 6 characters.");
+        }
+    }
+
+    public boolean confirm(Scanner scanner, String message) {
+
+        while (true) {
+
+            System.out.print(message + " (Y/N): ");
+
+            String input = scanner.nextLine();
+
+            if (input.equalsIgnoreCase("Y"))
+                return true;
+
+            if (input.equalsIgnoreCase("N"))
+                return false;
+
+            System.out.println("Please enter Y or N.");
+        }
+    }
 }

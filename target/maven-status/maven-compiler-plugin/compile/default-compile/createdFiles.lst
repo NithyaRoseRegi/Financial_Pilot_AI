@@ -2,8 +2,12 @@ com\financialpilot\app\FinancialPilotApp.class
 com\financialpilot\model\User.class
 com\financialpilot\service\ExpenseService.class
 com\financialpilot\util\InputValidator.class
-com\financialpilot\model\BankAccount.class
 com\financialpilot\service\BankAccountService.class
 com\financialpilot\model\Expense.class
-com\financialpilot\service\SummaryService.class
+com\financialpilot\database\BankAccountDAO.class
 com\financialpilot\service\UserService.class
+com\financialpilot\database\UserDAO.class
+com\financialpilot\model\BankAccount.class
+com\financialpilot\database\DBConnection.class
+com\financialpilot\database\ExpenseDAO.class
+com\financialpilot\app\TestDB.class

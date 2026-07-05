@@ -2,44 +2,33 @@ package com.financialpilot.model;
 
 public class User {
 
+    private int userId;
     private String name;
-    private int age;
     private String email;
-    private double monthlyIncome;
+    private String password;
 
+    // Default Constructor
     public User() {
 
     }
 
-    public User(String name, int age, String email, double monthlyIncome) {
+    // Parameterized Constructor
+    public User(int userId, String name, String email, String password) {
+        this.userId = userId;
         this.name = name;
-        this.age = age;
         this.email = email;
-        this.monthlyIncome = monthlyIncome;
+        this.password = password;
     }
 
-    public void displayProfile() {
+    // Getters and Setters
 
-        System.out.println("\n========== USER PROFILE ==========");
-
-        System.out.println("Name            : " + name);
-        System.out.println("Age             : " + age);
-        System.out.println("Email           : " + email);
-        System.out.println("Monthly Income  : $" + monthlyIncome);
-
+    public int getUserId() {
+        return userId;
     }
 
-    public void displayProfile(boolean showIncome) {
-
-    System.out.println("\n========== USER PROFILE ==========");
-    System.out.println("Name           : " + name);
-    System.out.println("Age            : " + age);
-    System.out.println("Email          : " + email);
-
-    if (showIncome) {
-        System.out.println("Monthly Income : $" + monthlyIncome);
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
-}
 
     public String getName() {
         return name;
@@ -47,14 +36,6 @@ public class User {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public int getAge() {
-        return age;
-    }
-
-    public void setAge(int age) {
-        this.age = age;
     }
 
     public String getEmail() {
@@ -65,11 +46,20 @@ public class User {
         this.email = email;
     }
 
-    public double getMonthlyIncome() {
-        return monthlyIncome;
+    public String getPassword() {
+        return password;
     }
 
-    public void setMonthlyIncome(double monthlyIncome) {
-        this.monthlyIncome = monthlyIncome;
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "userId=" + userId +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                '}';
     }
 }
