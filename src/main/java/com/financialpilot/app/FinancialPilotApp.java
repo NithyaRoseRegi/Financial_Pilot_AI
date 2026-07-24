@@ -2,7 +2,14 @@ package com.financialpilot.app;
 
 import java.util.Scanner;
 
+import com.financialpilot.exception.AuthenticationException;
+import com.financialpilot.exception.BankAccountNotFoundException;
+import com.financialpilot.exception.DatabaseException;
+import com.financialpilot.exception.DuplicateEmailException;
+import com.financialpilot.exception.ExpenseNotFoundException;
+import com.financialpilot.exception.ValidationException;
 import com.financialpilot.service.BankAccountService;
+import com.financialpilot.service.BudgetService;
 import com.financialpilot.service.ExpenseService;
 import com.financialpilot.service.UserService;
 
@@ -16,9 +23,11 @@ public class FinancialPilotApp {
             new BankAccountService(userService);
 
     private static ExpenseService expenseService =
-            new ExpenseService(userService, bankAccountService);
+            new ExpenseService(userService);
 
-    public static void main(String[] args) {
+    private static BudgetService budgetService = new BudgetService();
+
+    public static void main(String[] args) throws DuplicateEmailException, ValidationException, DatabaseException, BankAccountNotFoundException, ExpenseNotFoundException {
 
         while (true) {
 
@@ -32,7 +41,7 @@ public class FinancialPilotApp {
 
     // ================= LOGIN MENU =================
 
-    public static void showLoginMenu() {
+    public static void showLoginMenu() throws DuplicateEmailException, DatabaseException, ValidationException {
 
         System.out.println("\n========== FINANCIAL PILOT AI ==========");
         System.out.println("1. Register");
@@ -49,9 +58,12 @@ public class FinancialPilotApp {
                 break;
 
             case 2:
-                userService.loginUser(scanner);
+                try {
+                    userService.loginUser(scanner);
+                } catch (AuthenticationException e) {
+                    System.out.println(e.getMessage());
+                }
                 break;
-
             case 3:
                 System.out.println("Thank You!");
                 System.exit(0);
@@ -63,7 +75,7 @@ public class FinancialPilotApp {
 
     // ================= MAIN MENU =================
 
-    public static void showMainMenu() {
+    public static void showMainMenu() throws BankAccountNotFoundException, ExpenseNotFoundException {
 
         System.out.println("\n========== MAIN MENU ==========");
         System.out.println("Welcome " +
@@ -71,9 +83,11 @@ public class FinancialPilotApp {
 
         System.out.println("1. Bank Accounts");
         System.out.println("2. Expenses");
-        System.out.println("3. Current User");
-        System.out.println("4. Logout");
-        System.out.println("5. Exit");
+        System.out.println("3. Budget");
+        System.out.println("4. Analytics");
+        System.out.println("5. Current User");
+        System.out.println("6. Logout");
+        System.out.println("7. Exit");
 
         System.out.print("Enter Choice: ");
 
@@ -90,14 +104,22 @@ public class FinancialPilotApp {
                 break;
 
             case 3:
+                budgetService.budgetMenu(scanner);
+                break;
+                
+            case 4:
                 userService.showCurrentUser();
                 break;
 
-            case 4:
+            case 5:
+                expenseService.analyticsMenu(scanner);
+                 break;
+
+            case 6:
                 userService.logoutUser();
                 break;
 
-            case 5:
+            case 7:
                 System.exit(0);
 
             default:
@@ -107,7 +129,7 @@ public class FinancialPilotApp {
 
     // ================= BANK MENU =================
 
-    public static void showBankMenu() {
+    public static void showBankMenu() throws BankAccountNotFoundException {
 
         while (true) {
 
@@ -151,7 +173,7 @@ public class FinancialPilotApp {
 
     // ================= EXPENSE MENU =================
 
-    public static void showExpenseMenu() {
+    public static void showExpenseMenu() throws ExpenseNotFoundException {
 
         while (true) {
 

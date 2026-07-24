@@ -1,17 +1,26 @@
 package com.financialpilot.service;
 
 import java.util.Scanner;
+import java.util.ArrayList;
 
+
+import com.financialpilot.exception.UserNotFoundException;
 import com.financialpilot.database.UserDAO;
+import com.financialpilot.exception.AuthenticationException;
+import com.financialpilot.exception.DatabaseException;
+import com.financialpilot.exception.DuplicateEmailException;
+import com.financialpilot.exception.ValidationException;
 import com.financialpilot.model.User;
 import com.financialpilot.util.InputValidator;
+import com.financialpilot.util.PasswordUtil;
 
 public class UserService {
 
     private User currentUser;
     private InputValidator validator = new InputValidator();
+    private UserDAO userDAO = new UserDAO();
     // Register User
-    public void registerUser(Scanner scanner) {
+    public void registerUser(Scanner scanner) throws DuplicateEmailException, DatabaseException, ValidationException {
 
         User user = new User();
 
@@ -21,6 +30,11 @@ public class UserService {
 
         user.setPassword(validator.readPassword(scanner, "Enter Password: "));
 
+        if (UserDAO.emailExists(user.getEmail())) {
+                throw new DuplicateEmailException("Email already registered.");
+        }
+        
+        
         boolean success = UserDAO.registerUser(user);
 
         if (success) {
@@ -30,24 +44,91 @@ public class UserService {
         }
     }
 
+    public void registerUser(User user)
+        throws DuplicateEmailException,
+               DatabaseException,
+               ValidationException {
+
+    if (user.getName() == null || user.getName().trim().isEmpty()) {
+        throw new ValidationException("Name cannot be empty.");
+    }
+
+    if (user.getEmail() == null || user.getEmail().trim().isEmpty()) {
+        throw new ValidationException("Email cannot be empty.");
+    }
+
+    if (user.getPassword() == null || user.getPassword().trim().isEmpty()) {
+        throw new ValidationException("Password cannot be empty.");
+    }
+
+    if (UserDAO.emailExists(user.getEmail())) {
+        throw new DuplicateEmailException("Email already registered.");
+    }
+
+    boolean success = UserDAO.registerUser(user);
+
+    if (!success) {
+        throw new DatabaseException("Failed to register user.");
+    }
+}
+
     // Login User
-    public void loginUser(Scanner scanner) {
+    public void loginUser(Scanner scanner) throws AuthenticationException, ValidationException {
 
       
         String email = validator.readEmail(scanner, "Enter Email: ");
 
         String password = validator.readPassword(scanner, "Enter Password: ");
 
-        currentUser = UserDAO.login(email, password);
+      
+        User user = UserDAO.getUserByEmail(email);
 
-        if (currentUser != null) {
-            System.out.println("\n✅ Login Successful!");
-            System.out.println("Welcome, " + currentUser.getName() + "!");
-        } else {
-            System.out.println("\n❌ Invalid email or password.");
+       if (user == null) {
+           throw new AuthenticationException("Invalid email or password.");
+       }
+
+       if (!PasswordUtil.verifyPassword(password, user.getPassword())) {
+              throw new AuthenticationException("Invalid email or password.");
         }
+
+        if (PasswordUtil.verifyPassword(password, user.getPassword())) {
+
+        currentUser = user;
+
+        System.out.println("Login Successful!");
+        System.out.println("Welcome, " + user.getName());
+
+        } else {
+
+        System.out.println("Invalid Password.");
+        }
+       
     }
 
+    public User loginUser(String email,
+                      String password)
+        throws AuthenticationException {
+
+    User user = UserDAO.getUserByEmail(email);
+
+    if (user == null) {
+        throw new AuthenticationException(
+                "Invalid email or password.");
+    }
+
+    if (!PasswordUtil.verifyPassword(
+            password,
+            user.getPassword())) {
+
+        throw new AuthenticationException(
+                "Invalid email or password.");
+    }
+
+    currentUser = user;
+
+    return user;
+    }
+    
     // Logout User
     public void logoutUser() {
 
@@ -82,4 +163,87 @@ public class UserService {
             System.out.println("No user is logged in.");
         }
     }
+    public User getUserById(int userId)
+        throws UserNotFoundException {
+
+    User user = UserDAO.getUserById(userId);
+
+    if (user == null) {
+
+        throw new UserNotFoundException(
+                "User not found.");
+    }
+
+    return user;
+   }
+   public ArrayList<User> getAllUsers() {
+
+    return UserDAO.getAllUsers();
+   }
+   public void updateUser(User user)
+        throws ValidationException,
+               DatabaseException,
+               UserNotFoundException {
+
+    User existingUser =
+            UserDAO.getUserById(user.getUserId());
+
+    if (existingUser == null) {
+
+        throw new UserNotFoundException(
+                "User not found.");
+    }
+
+    if (user.getName() == null ||
+        user.getName().trim().isEmpty()) {
+
+        throw new ValidationException(
+                "Name cannot be empty.");
+    }
+
+    if (user.getEmail() == null ||
+        user.getEmail().trim().isEmpty()) {
+
+        throw new ValidationException(
+                "Email cannot be empty.");
+    }
+
+    if (user.getPassword() == null ||
+        user.getPassword().trim().isEmpty()) {
+
+        throw new ValidationException(
+                "Password cannot be empty.");
+    }
+
+    boolean success =
+            UserDAO.updateUser(user);
+
+    if (!success) {
+
+        throw new DatabaseException(
+                "Unable to update user.");
+    }
+}
+public void deleteUser(int userId)
+        throws UserNotFoundException,
+               DatabaseException {
+
+    User user =
+            UserDAO.getUserById(userId);
+
+    if (user == null) {
+
+        throw new UserNotFoundException(
+                "User not found.");
+    }
+
+    boolean success =
+            UserDAO.deleteUser(userId);
+
+    if (!success) {
+
+        throw new DatabaseException(
+                "Unable to delete user.");
+    }
+}
 }

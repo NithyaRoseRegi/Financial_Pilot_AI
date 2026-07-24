@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.Scanner;
 
+import com.financialpilot.exception.ValidationException;
+
 public class InputValidator {
 
     public String readNonEmptyString(Scanner scanner, String message) {
@@ -99,22 +101,20 @@ public class InputValidator {
         }
     }
 
-    public String readPassword(Scanner scanner, String message) {
+    public String readPassword(Scanner scanner, String message)
+        throws ValidationException {
 
-        while (true) {
+    System.out.print(message);
 
-            System.out.print(message);
+    String password = scanner.nextLine();
 
-            String password = scanner.nextLine();
-
-            if (password.length() >= 6) {
-
-                return password;
-            }
-
-            System.out.println("Password must contain at least 6 characters.");
-        }
+    if (password.length() < 8) {
+        throw new ValidationException(
+                "Password must contain at least 8 characters.");
     }
+
+    return password;
+}
 
     public boolean confirm(Scanner scanner, String message) {
 

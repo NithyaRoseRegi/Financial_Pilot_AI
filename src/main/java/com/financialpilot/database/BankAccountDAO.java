@@ -70,8 +70,7 @@ public class BankAccountDAO {
     }
 
     // Get All Accounts of a User
-    public static ArrayList<BankAccount> getAllBankAccountsByUser(int userId) {
-
+    public static ArrayList<BankAccount> getAllAccountsByUser(int userId) {
         ArrayList<BankAccount> accounts = new ArrayList<>();
 
         String sql = "SELECT * FROM bank_accounts WHERE user_id = ?";
@@ -109,19 +108,22 @@ public class BankAccountDAO {
 
         String sql = """
                 UPDATE bank_accounts
-                SET user_id = ?, bank_name = ?, account_number = ?, account_type = ?, balance = ?
-                WHERE account_id = ?
+                SET bank_name=?,
+                account_number=?,
+                account_type=?,
+                balance=?
+               WHERE account_id=?
                 """;
 
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            stmt.setInt(1, account.getUserId());
-            stmt.setString(2, account.getBankName());
-            stmt.setString(3, account.getAccountNumber());
-            stmt.setString(4, account.getAccountType());
-            stmt.setDouble(5, account.getBalance());
-            stmt.setInt(6, account.getAccountId());
+            
+            stmt.setString(1, account.getBankName());
+            stmt.setString(2,account.getAccountNumber());
+            stmt.setString(3, account.getAccountType());
+            stmt.setDouble(4, account.getBalance());
+            stmt.setInt(5, account.getAccountId());
 
             return stmt.executeUpdate() > 0;
 
