@@ -1,8 +1,9 @@
 package com.financialpilot.service;
-
+import java.util.List;
 import java.util.Scanner;
 
 import com.financialpilot.database.BudgetDAO;
+import com.financialpilot.dto.BudgetSummary;
 import com.financialpilot.model.Budget;
 import com.financialpilot.model.User;
 
@@ -223,4 +224,155 @@ public class BudgetService {
             System.out.println("Status           : Budget Exceeded");
         }
     }
+
+    // ================= REST API =================
+
+public void addBudget(Budget budget) throws Exception {
+
+    if (budget == null) {
+        throw new Exception("Budget details cannot be empty.");
+    }
+
+    if (budget.getAmount() <= 0) {
+        throw new Exception("Budget amount must be greater than zero.");
+    }
+
+    if (budget.getMonth() < 1 || budget.getMonth() > 12) {
+        throw new Exception("Invalid month.");
+    }
+
+    if (BudgetDAO.budgetExists(
+            budget.getUserId(),
+            budget.getMonth(),
+            budget.getYear())) {
+
+        throw new Exception("Budget already exists for this month.");
+    }
+
+    boolean added = BudgetDAO.addBudget(budget);
+
+    if (!added) {
+        throw new Exception("Unable to add budget.");
+    }
+}
+
+public Budget getBudget(int userId,
+                        int month,
+                        int year) throws Exception {
+
+    Budget budget =
+            BudgetDAO.getBudget(userId, month, year);
+
+    if (budget == null) {
+        throw new Exception("Budget not found.");
+    }
+
+    return budget;
+}
+
+public List<Budget> getAllBudgets(int userId) {
+
+    return BudgetDAO.getAllBudgets(userId);
+
+}
+
+public void updateBudget(Budget budget)
+        throws Exception {
+
+    if (budget == null) {
+        throw new Exception("Budget details cannot be empty.");
+    }
+
+    if (budget.getAmount() <= 0) {
+        throw new Exception("Budget amount must be greater than zero.");
+    }
+
+    Budget existingBudget =
+            BudgetDAO.getBudget(
+                    budget.getUserId(),
+                    budget.getMonth(),
+                    budget.getYear());
+
+    if (existingBudget == null) {
+        throw new Exception("Budget not found.");
+    }
+
+    budget.setBudgetId(existingBudget.getBudgetId());
+
+    boolean updated =
+            BudgetDAO.updateBudget(budget);
+
+    if (!updated) {
+        throw new Exception("Unable to update budget.");
+    }
+}
+public void deleteBudget(int userId,
+                         int month,
+                         int year)
+        throws Exception {
+
+    Budget budget =
+            BudgetDAO.getBudget(userId,
+                    month,
+                    year);
+
+    if (budget == null) {
+        throw new Exception("Budget not found.");
+    }
+
+    boolean deleted =
+            BudgetDAO.deleteBudget(
+                    budget.getBudgetId());
+
+    if (!deleted) {
+        throw new Exception("Unable to delete budget.");
+    }
+}
+ public BudgetSummary getRemainingBudget(
+        int userId,
+        int month,
+        int year)
+        throws Exception {
+
+    Budget budget =
+            BudgetDAO.getBudget(userId,
+                    month,
+                    year);
+
+    if (budget == null) {
+        throw new Exception("Budget not found.");
+    }
+
+    double totalExpenses =
+            BudgetDAO.getTotalExpenses(
+                    userId,
+                    month,
+                    year);
+
+    double remaining =
+            BudgetDAO.getRemainingBudget(
+                    userId,
+                    month,
+                    year);
+
+    BudgetSummary summary =
+            new BudgetSummary();
+
+    summary.setBudgetAmount(
+            budget.getAmount());
+
+    summary.setTotalExpenses(
+            totalExpenses);
+
+    summary.setRemainingBudget(
+            remaining);
+
+    if (remaining >= 0) {
+        summary.setStatus("Within Budget");
+    } else {
+        summary.setStatus("Budget Exceeded");
+    }
+
+    return summary;
+}
 }

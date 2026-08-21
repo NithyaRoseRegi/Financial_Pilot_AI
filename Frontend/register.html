@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Register - Financial Pilot AI</title>
+
+    <!-- Bootstrap -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
+        rel="stylesheet">
+
+    <link
+        rel="stylesheet"
+        href="css/style.css">
+
+</head>
+
+
+<body>
+
+<div class="container">
+
+    <div class="row justify-content-center">
+
+        <div class="col-md-6">
+
+            <div class="card shadow mt-5">
+
+                <div class="card-body p-4">
+
+                    <h2 class="text-center mb-4">
+
+                        Create Account
+
+                    </h2>
+
+
+                    <p class="text-center text-muted">
+
+                        Register for Financial Pilot AI
+
+                    </p>
+
+
+                    <!-- Name -->
+
+                    <div class="mb-3">
+
+                        <label
+                            for="name"
+                            class="form-label">
+
+                            Full Name
+
+                        </label>
+
+                        <input
+                            type="text"
+                            id="name"
+                            class="form-control"
+                            placeholder="Enter your name">
+
+                    </div>
+
+
+                    <!-- Email -->
+
+                    <div class="mb-3">
+
+                        <label
+                            for="email"
+                            class="form-label">
+
+                            Email
+
+                        </label>
+
+                        <input
+                            type="email"
+                            id="email"
+                            class="form-control"
+                            placeholder="Enter your email">
+
+                    </div>
+
+
+                    <!-- Password -->
+
+                    <div class="mb-3">
+
+                        <label
+                            for="password"
+                            class="form-label">
+
+                            Password
+
+                        </label>
+
+                        <input
+                            type="password"
+                            id="password"
+                            class="form-control"
+                            placeholder="Enter your password">
+
+                    </div>
+
+
+                    <!-- Confirm Password -->
+
+                    <div class="mb-3">
+
+                        <label
+                            for="confirmPassword"
+                            class="form-label">
+
+                            Confirm Password
+
+                        </label>
+
+                        <input
+                            type="password"
+                            id="confirmPassword"
+                            class="form-control"
+                            placeholder="Confirm your password">
+
+                    </div>
+
+
+                    <!-- Register Button -->
+
+                    <button
+                        id="registerButton"
+                        class="btn btn-primary w-100 mt-3"
+                        onclick="registerUser()">
+
+                        Register
+
+                    </button>
+
+
+                    <!-- Login -->
+
+                    <p class="text-center mt-4">
+
+                        Already have an account?
+
+                        <a href="login.html">
+
+                            Login
+
+                        </a>
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script src ="js/api.js"></script>
+<script src="js/register.js"></script>
+
+</body>
+
+</html>

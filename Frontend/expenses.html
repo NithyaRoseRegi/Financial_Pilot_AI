@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Expenses - Financial Pilot AI</title>
+
+    <!-- Bootstrap CSS -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
+        rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet"
+          href="css/style.css">
+
+</head>
+
+<body>
+
+<div class="container-fluid">
+
+    <div class="row">
+
+        <!-- Sidebar -->
+
+        <div class="col-md-2 bg-dark text-white vh-100 p-3">
+
+            <h3>Financial Pilot AI</h3>
+
+            <hr>
+
+            <a href="dashboard.html"
+               class="d-block text-white mb-3 text-decoration-none">
+
+                Dashboard
+
+            </a>
+
+            <a href="bankaccounts.html"
+               class="d-block text-white mb-3 text-decoration-none">
+
+                Bank Accounts
+
+            </a>
+
+            <a href="expenses.html"
+               class="d-block text-white mb-3 text-decoration-none">
+
+                Expenses
+
+            </a>
+
+            <a href="budget.html"
+               class="d-block text-white mb-3 text-decoration-none">
+
+                Budget
+
+            </a>
+
+            <a href="summary.html"
+               class="d-block text-white mb-3 text-decoration-none">
+
+                Financial Summary
+
+            </a>
+
+            <button
+                    class="btn btn-danger w-100 mt-4"
+                    onclick="logout()">
+
+                Logout
+
+            </button>
+
+        </div>
+
+        <!-- Main Content -->
+
+        <div class="col-md-10 p-4">
+
+            <h2>Expense Management</h2>
+
+            <hr>
+
+            <!-- Add Expense Card -->
+
+            <div class="card shadow mb-4">
+
+                <div class="card-header">
+
+                    <h5>Add / Update Expense</h5>
+
+                </div>
+
+                <div class="card-body">
+
+                    <div class="row">
+
+                        <div class="col-md-4 mb-3">
+
+                            <label class="form-label">
+
+                                Expense Name
+
+                            </label>
+
+                            <input
+                                    type="text"
+                                    id="expenseName"
+                                    class="form-control">
+
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+
+                            <label class="form-label">
+
+                                Category
+
+                            </label>
+
+                            <select
+                                    id="category"
+                                    class="form-select">
+
+                                <option>Food</option>
+
+                                <option>Travel</option>
+
+                                <option>Shopping</option>
+
+                                <option>Bills</option>
+
+                                <option>Entertainment</option>
+
+                                <option>Health</option>
+
+                                <option>Education</option>
+
+                                <option>Other</option>
+
+                            </select>
+
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+
+                            <label class="form-label">
+
+                                Account
+
+                            </label>
+
+                            <select
+                                    id="accountId"
+                                    class="form-select">
+
+                                <option value="">Select Account</option>
+
+                            </select>
+
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+
+                            <label class="form-label">
+
+                                Amount
+
+                            </label>
+
+                            <input
+                                    type="number"
+                                    id="amount"
+                                    class="form-control">
+
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-md-4 mb-3">
+
+                            <label class="form-label">
+
+                                Date
+
+                            </label>
+
+                            <input
+                                    type="date"
+                                    id="expenseDate"
+                                    class="form-control">
+
+                        </div>
+
+                        <div class="col-md-8 mb-3">
+
+                            <label class="form-label">
+
+                                Description
+
+                            </label>
+
+                            <input
+                                    type="text"
+                                    id="description"
+                                    class="form-control">
+
+                        </div>
+
+                    </div>
+
+                    <button
+                            id="saveButton"
+                            class="btn btn-primary"
+                            onclick="saveExpense()">
+
+                        Add Expense
+
+                    </button>
+
+                </div>
+
+            </div>
+
+            <!-- Expense Table -->
+
+            <div class="card shadow">
+
+                <div class="card-header">
+
+                    <h5>Expense List</h5>
+
+                </div>
+
+                <div class="card-body">
+
+                    <table
+                            class="table table-bordered table-hover">
+
+                        <thead class="table-dark">
+
+                        <tr>
+
+                            <th>ID</th>
+
+                            <th>Name</th>
+
+                            <th>Category</th>
+
+                            <th>Amount</th>
+
+                            <th>Date</th>
+
+                            <th>Description</th>
+
+                            <th>Actions</th>
+
+                        </tr>
+
+                        </thead>
+
+                        <tbody id="expenseTable">
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script src="js/api.js"></script>
+
+<script src="js/expense.js"></script>
+
+</body>
+
+</html>

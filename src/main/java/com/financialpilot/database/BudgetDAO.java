@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.financialpilot.model.Budget;
 
@@ -64,6 +66,58 @@ public class BudgetDAO {
 
         return null;
     }
+
+    public static List<Budget> getAllBudgets(int userId) {
+
+    List<Budget> budgets = new ArrayList<>();
+
+    String sql =
+            "SELECT * FROM budgets " +
+            "WHERE user_id = ? " +
+            "ORDER BY year DESC, month DESC";
+
+    try (
+        Connection connection =
+                DBConnection.getConnection();
+
+        PreparedStatement statement =
+                connection.prepareStatement(sql)
+    ) {
+
+        statement.setInt(1, userId);
+
+        ResultSet resultSet =
+                statement.executeQuery();
+
+        while (resultSet.next()) {
+
+            Budget budget = new Budget();
+
+            budget.setBudgetId(
+                    resultSet.getInt("budget_id"));
+
+            budget.setUserId(
+                    resultSet.getInt("user_id"));
+
+            budget.setMonth(
+                    resultSet.getInt("month"));
+
+            budget.setYear(
+                    resultSet.getInt("year"));
+
+            budget.setAmount(
+                    resultSet.getDouble("amount"));
+
+            budgets.add(budget);
+        }
+
+    } catch (SQLException e) {
+
+        throw new RuntimeException(e);
+    }
+
+    return budgets;
+}
 
     // Update Budget
     public static boolean updateBudget(Budget budget) {
