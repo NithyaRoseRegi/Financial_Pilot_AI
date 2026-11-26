@@ -1,3 +1,5 @@
+C:\Users\nrrka\Financial_Pilot_AI\src\main\java\com\financialpilot\ai\aiclient.java
+C:\Users\nrrka\Financial_Pilot_AI\src\main\java\com\financialpilot\ai\aiservice.java
 C:\Users\nrrka\Financial_Pilot_AI\src\main\java\com\financialpilot\app\FinancialPilotApp.java
 C:\Users\nrrka\Financial_Pilot_AI\src\main\java\com\financialpilot\app\TestDB.java
 C:\Users\nrrka\Financial_Pilot_AI\src\main\java\com\financialpilot\database\BankAccountDAO.java
@@ -31,6 +33,7 @@ C:\Users\nrrka\Financial_Pilot_AI\src\main\java\com\financialpilot\Service\Expen
 C:\Users\nrrka\Financial_Pilot_AI\src\main\java\com\financialpilot\Service\FinancialReportService.java
 C:\Users\nrrka\Financial_Pilot_AI\src\main\java\com\financialpilot\Service\SummaryService.java
 C:\Users\nrrka\Financial_Pilot_AI\src\main\java\com\financialpilot\Service\UserService.java
+C:\Users\nrrka\Financial_Pilot_AI\src\main\java\com\financialpilot\servlet\AIServlet.java
 C:\Users\nrrka\Financial_Pilot_AI\src\main\java\com\financialpilot\servlet\BankAccountServlet.java
 C:\Users\nrrka\Financial_Pilot_AI\src\main\java\com\financialpilot\servlet\BudgetServlet.java
 C:\Users\nrrka\Financial_Pilot_AI\src\main\java\com\financialpilot\servlet\ExpenseServlet.java
