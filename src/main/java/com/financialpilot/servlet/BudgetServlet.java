@@ -30,7 +30,6 @@ public class BudgetServlet extends HttpServlet {
         addBudget(request, response);
     }
 
-
 @Override
 
 protected void doGet(HttpServletRequest request,
@@ -278,4 +277,10 @@ protected void doGet(HttpServletRequest request,
                     e.getMessage());
         }
     }
+@Override
+protected void doPut(HttpServletRequest request,
+                     HttpServletResponse response)
+        throws ServletException, IOException {
+    updateBudget(request, response);
+}
 }
