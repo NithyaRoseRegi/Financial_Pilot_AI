@@ -5,17 +5,20 @@ public class LoginResponse {
     private int userId;
     private String name;
     private String email;
+    private String accessToken;
 
     public LoginResponse() {
     }
 
     public LoginResponse(int userId,
                          String name,
-                         String email) {
+                         String email,
+                         String accessToken) {
 
         this.userId = userId;
         this.name = name;
         this.email = email;
+        this.accessToken = accessToken;
     }
 
     public int getUserId() {
@@ -40,5 +43,13 @@ public class LoginResponse {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getAccessToken() {
+        return accessToken;
+    }
+
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
     }
 }

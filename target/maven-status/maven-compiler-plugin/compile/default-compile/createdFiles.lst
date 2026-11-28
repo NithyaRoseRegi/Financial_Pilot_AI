@@ -10,7 +10,9 @@ com\financialpilot\exception\DuplicateEmailException.class
 com\financialpilot\util\PasswordUtil.class
 com\financialpilot\dto\FinancialSummary.class
 com\financialpilot\dto\LoginResponse.class
+com\financialpilot\util\JwtService.class
 com\financialpilot\database\UserDAO.class
+com\financialpilot\security\BearerTokenFilter.class
 com\financialpilot\service\SummaryService.class
 com\financialpilot\dto\LoginRequest.class
 com\financialpilot\database\ExpenseDAO.class
@@ -36,6 +38,7 @@ com\financialpilot\model\BankAccount.class
 com\financialpilot\service\BudgetService.class
 com\financialpilot\servlet\UserServlet.class
 com\financialpilot\database\DBConnection.class
+com\financialpilot\servlet\BudgetServlet$BudgetPatchRequest.class
 com\financialpilot\servlet\BudgetServlet.class
 com\financialpilot\exception\DatabaseException.class
 com\financialpilot\app\TestDB.class

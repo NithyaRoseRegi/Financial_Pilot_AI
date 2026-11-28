@@ -25,7 +25,11 @@
     <version>4.35.0</version>
     <scope>test</scope>
   </dependency>
-  
+  <dependency>
+    <groupId>com.auth0</groupId>
+    <artifactId>java-jwt</artifactId>
+    <version>4.5.0</version>
+</dependency>
 
     <!-- REST Assured -->
     <dependency>
@@ -86,6 +90,11 @@
    <dependency>
     <groupId>com.fasterxml.jackson.core</groupId>
     <artifactId>jackson-databind</artifactId>
+    <version>2.18.2</version>
+   </dependency>
+   <dependency>
+    <groupId>com.fasterxml.jackson.core</groupId>
+    <artifactId>jackson-core</artifactId>
     <version>2.18.2</version>
    </dependency>
   </dependencies>

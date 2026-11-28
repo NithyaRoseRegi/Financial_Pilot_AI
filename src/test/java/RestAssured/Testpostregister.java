@@ -13,7 +13,7 @@ import io.restassured.http.ContentType;
 public class Testpostregister {
     private record RegisterRequest(String name, String email, String password) {}
 
-    @Test
+    @Test(priority = -3)
     public void testPostRegister() {
         String email = "test-" + UUID.randomUUID() + "@example.com";
 
@@ -21,7 +21,7 @@ public class Testpostregister {
             new RegisterRequest("Test User", email, "Test12345!");
 
         given()
-            .spec(ApiSpecifications.api())
+            .spec(ApiSpecifications.publicApi())
             .contentType(ContentType.JSON)
             .body(request)
         .when()

@@ -91,6 +91,17 @@ protected void doGet(HttpServletRequest request,
         deleteBudget(request, response);
     }
 
+    @Override
+protected void service(HttpServletRequest request,
+                       HttpServletResponse response)
+        throws ServletException, IOException {
+    if ("PATCH".equalsIgnoreCase(request.getMethod())) {
+        patchBudget(request, response);
+    } else {
+        super.service(request, response);
+    }
+}
+
     // ---------------- POST ----------------
 
     private void addBudget(HttpServletRequest request,
@@ -277,6 +288,42 @@ protected void doGet(HttpServletRequest request,
                     e.getMessage());
         }
     }
+
+    private record BudgetPatchRequest(Double amount) {}
+
+private void patchBudget(HttpServletRequest request,
+                         HttpServletResponse response)
+        throws IOException {
+    try {
+        String[] path = request.getPathInfo().split("/");
+        if (path.length != 4) {
+            ResponseUtil.sendError(response, "Expected /budget/{userId}/{month}/{year}");
+            return;
+        }
+
+        BudgetPatchRequest patch =
+                mapper.readValue(request.getReader(), BudgetPatchRequest.class);
+
+        if (patch == null || patch.amount() == null || patch.amount() <= 0) {
+            ResponseUtil.sendError(response, "A positive amount is required.");
+            return;
+        }
+
+        Budget budget = new Budget(
+                Integer.parseInt(path[1]),
+                Integer.parseInt(path[2]),
+                Integer.parseInt(path[3]),
+                patch.amount());
+
+        budgetService.updateBudget(budget);
+
+        ResponseUtil.sendSuccess(
+                response, "Budget Updated Successfully.", budget);
+    } catch (Exception e) {
+        ResponseUtil.sendError(response, e.getMessage());
+    }
+}
+
 @Override
 protected void doPut(HttpServletRequest request,
                      HttpServletResponse response)

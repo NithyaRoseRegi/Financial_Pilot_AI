@@ -11,6 +11,7 @@ import com.financialpilot.exception.ValidationException;
 import com.financialpilot.model.User;
 import com.financialpilot.service.UserService;
 import com.financialpilot.util.JsonUtil;
+import com.financialpilot.util.JwtService;
 import com.financialpilot.util.ResponseUtil;
 import com.financialpilot.exception.UserNotFoundException;
 import jakarta.servlet.ServletException;
@@ -99,11 +100,15 @@ private void registerUser(HttpServletRequest request,
                 loginRequest.getEmail(),
                 loginRequest.getPassword());
 
+        String accessToken =
+                JwtService.createAccessToken(user.getUserId());
+
         LoginResponse loginResponse =
                 new LoginResponse(
                         user.getUserId(),
                         user.getName(),
-                        user.getEmail());
+                        user.getEmail(),
+                        accessToken);
 
         ResponseUtil.sendSuccess(
                 response,

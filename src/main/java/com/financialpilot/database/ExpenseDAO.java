@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -21,7 +22,8 @@ public class ExpenseDAO {
                 """;
 
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+             PreparedStatement stmt = conn.prepareStatement(
+                     sql, Statement.RETURN_GENERATED_KEYS)) {
 
             stmt.setInt(1, expense.getUserId());
             stmt.setInt(2, expense.getAccountId());
@@ -31,7 +33,18 @@ public class ExpenseDAO {
             stmt.setDate(6, java.sql.Date.valueOf(expense.getDate()));
             stmt.setString(7, expense.getNote());
 
-            return stmt.executeUpdate() > 0;
+            if (stmt.executeUpdate() == 0) {
+                return false;
+            }
+
+            try (ResultSet keys = stmt.getGeneratedKeys()) {
+                if (keys.next()) {
+                    expense.setExpenseId(keys.getInt(1));
+                    return true;
+                }
+            }
+
+            return false;
 
         } catch (Exception e) {
             e.printStackTrace();

@@ -27,6 +27,7 @@ C:\Users\nrrka\Financial_Pilot_AI\src\main\java\com\financialpilot\model\BankAcc
 C:\Users\nrrka\Financial_Pilot_AI\src\main\java\com\financialpilot\model\Budget.java
 C:\Users\nrrka\Financial_Pilot_AI\src\main\java\com\financialpilot\model\Expense.java
 C:\Users\nrrka\Financial_Pilot_AI\src\main\java\com\financialpilot\model\User.java
+C:\Users\nrrka\Financial_Pilot_AI\src\main\java\com\financialpilot\Security\BearerTokenFilter.java
 C:\Users\nrrka\Financial_Pilot_AI\src\main\java\com\financialpilot\Service\BankAccountService.java
 C:\Users\nrrka\Financial_Pilot_AI\src\main\java\com\financialpilot\Service\BudgetService.java
 C:\Users\nrrka\Financial_Pilot_AI\src\main\java\com\financialpilot\Service\ExpenseService.java
@@ -43,5 +44,6 @@ C:\Users\nrrka\Financial_Pilot_AI\src\main\java\com\financialpilot\servlet\Summa
 C:\Users\nrrka\Financial_Pilot_AI\src\main\java\com\financialpilot\servlet\UserServlet.java
 C:\Users\nrrka\Financial_Pilot_AI\src\main\java\com\financialpilot\util\InputValidator.java
 C:\Users\nrrka\Financial_Pilot_AI\src\main\java\com\financialpilot\util\JsonUtil.java
+C:\Users\nrrka\Financial_Pilot_AI\src\main\java\com\financialpilot\util\JwtService.java
 C:\Users\nrrka\Financial_Pilot_AI\src\main\java\com\financialpilot\util\PasswordUtil.java
 C:\Users\nrrka\Financial_Pilot_AI\src\main\java\com\financialpilot\util\ResponseUtil.java
