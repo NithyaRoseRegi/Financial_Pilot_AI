@@ -98,10 +98,10 @@ public class ExpenseServlet extends HttpServlet {
 
             expenseService.addExpense(expense);
 
-            ResponseUtil.sendSuccess(
+            ResponseUtil.sendCreated(
                     response,
                     "Expense Added Successfully",
-                    null);
+                    expense);
 
         } catch (ValidationException |
                  DatabaseException e) {
@@ -186,6 +186,8 @@ public class ExpenseServlet extends HttpServlet {
             throws IOException {
 
         try {
+            String path = request.getPathInfo();
+            int expenseId = Integer.parseInt(path.substring(1));
 
             Expense expense =
                     JsonUtil.getObjectMapper()
@@ -193,12 +195,13 @@ public class ExpenseServlet extends HttpServlet {
                                     request.getReader(),
                                     Expense.class);
 
+            expense.setExpenseId(expenseId);
             expenseService.updateExpense(expense);
 
             ResponseUtil.sendSuccess(
                     response,
-                    "Expense Updated Successfully",
-                    null);
+                    "Expense Updated Successfully.",
+                    expense);
 
         } catch (ExpenseNotFoundException |
                  ValidationException |
